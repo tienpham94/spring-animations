@@ -6,7 +6,7 @@ const Toggle = () => {
   const { y, color } = useSpring({
     // opacity: isToggled ? 1 : 0,
     color: isToggled ? "tomato" : "green",
-    y: isToggled ? 0 : -50
+    y: isToggled ? 0 : 1
   });
 
   return (
@@ -14,7 +14,10 @@ const Toggle = () => {
       <animated.h1
         style={{
           color,
-          transform: y.interpolate(y => `translate3d(0, ${y}px, 0)`)
+          transform: y.interpolate({
+            range: [0, .25, .50, .75, 1],
+            output: [0, -25, -50, -100, -50]
+          }).interpolate(y => `translate3d(0, ${y}px, 0)`)
         }}
       >
         Hello
