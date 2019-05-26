@@ -6,6 +6,7 @@ import {
   Link,
   __RouterContext
 } from "react-router-dom";
+import { useTransition, animated } from "react-spring";
 
 function useRouter() {
   return useContext(__RouterContext);
@@ -26,16 +27,25 @@ const Routes = () => {
 
 const Main = () => {
   const { location } = useRouter();
-  console.log(location)
-  return (
-    <div>
-      <Switch>
+  const transition = useTransition(location, location => location.key, {
+    from: {
+      opacity: 0,
+      position: "absolute",
+      width: "100%",
+      transform: "translate3d(100%, 0,0)"
+    },
+    enter: { opacity: 1, transform: "translate3d(0, 0,0)" },
+    leave: { opacity: 0, transform: "translate3d(0, 100%,0)" }
+  });
+  return transition.map(({ item, props, key }) => (
+    <animated.div key={key} style={props}>
+      <Switch location={item}>
         <Route exact path="/" component={One} />
         <Route exact path="/two" component={Two} />
         <Route exact path="/three" component={Three} />
       </Switch>
-    </div>
-  );
+    </animated.div>
+  ));
 };
 
 function NavLink(props) {
